@@ -1,10 +1,20 @@
+import sys
+from pathlib import Path
+
+ROOT_DIR = Path(__file__).resolve().parents[2]
+sys.path.append(str(ROOT_DIR))
 from fastapi import FastAPI, Request
 from pathlib import Path
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from app.routers import login, register, admin, user
 
 app = FastAPI()
+
+app.include_router(login.router)
+app.include_router(register.router)
+
 
 BASE_DIR = Path(__file__).resolve().parent
 
