@@ -1,55 +1,78 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from app.model import User, Admin
-# Secret key (change this in production)
+
+# Secret Key (Change this in production)
 SECRET_KEY = "your_secret_key_here"
 
 # JWT Algorithm
 ALGORITHM = "HS256"
 
-# Token expiry time (minutes)
+# Token Expiry Time (Minutes)
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-# Password hashing
+# Password Hashing Context
 pwd_context = CryptContext(
     schemes=["bcrypt"],
     deprecated="auto"
 )
 
+
+# ----------------------------
+# Password Functions
+# ----------------------------
+
 def hash_password(password: str):
     return pwd_context.hash(password)
-  
+
+
 def verify_password(plain_password: str, hashed_password: str):
     return pwd_context.verify(
         plain_password,
         hashed_password
     )
-    
+
+
+# ----------------------------
+# JWT Token Functions
+# ----------------------------
+
 def create_access_token(data: dict):
+    """
+    Creates a JWT access token.
+
+    Example payload:
+    {
+        "id": 1,
+        "email": "abc@gmail.com",
+        "role": "admin"
+    }
+    """
 
     to_encode = data.copy()
 
-    expire = datetime.utcnow() + timedelta(
+    expire = datetime.now(timezone.utc) + timedelta(
         minutes=ACCESS_TOKEN_EXPIRE_MINUTES
     )
 
-    to_encode.update(
-        {"exp": expire}
-    )
+    to_encode.update({"exp": expire})
 
-    token = jwt.encode(
+    encoded_jwt = jwt.encode(
         to_encode,
         SECRET_KEY,
         algorithm=ALGORITHM
     )
 
-    return token
-  
+    return encoded_jwt
+
+
 def decode_access_token(token: str):
+    """
+    Decodes JWT token and returns payload.
+    Returns None if token is invalid or expired.
+    """
 
     try:
-
         payload = jwt.decode(
             token,
             SECRET_KEY,
@@ -59,28 +82,4 @@ def decode_access_token(token: str):
         return payload
 
     except JWTError:
-
         return None
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      

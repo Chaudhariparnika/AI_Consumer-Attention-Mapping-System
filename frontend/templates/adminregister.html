@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.tailwindcss.com"></script>
+<title>Register</title>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-emerald-200 via-slate-100 to-teal-300">
+
+<div class="flex min-h-screen items-center justify-center px-4 py-8">
+
+<form action="/admin/register" method="POST" id="registerForm" class="w-full max-w-md rounded-3xl border border-slate-200 bg-white/95 p-8 shadow-2xl shadow-slate-300/30 backdrop-blur-sm">
+
+<div class="mb-6 text-center">
+<span class="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-emerald-600 text-white text-2xl font-semibold shadow-lg shadow-emerald-500/20">A</span>
+<h1 class="mt-5 text-3xl font-semibold tracking-tight text-slate-900">Create your account</h1>
+<p class="mt-2 text-sm text-slate-500">Join now to access personalized insights and tools.</p>
+</div>
+
+<div class="space-y-4">
+<label class="block">
+<span class="mb-2 block text-sm font-medium text-slate-700">Full Name</span>
+<input id="full_name" name="full_name" type="text" placeholder="Jane Doe" class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"/>
+</label>
+<label class="block">
+<span class="mb-2 block text-sm font-medium text-slate-700">Email address</span>
+<input id="email" name="email" type="email" placeholder="jane@example.com" class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"/>
+</label>
+<label class="block">
+<span class="mb-2 block text-sm font-medium text-slate-700">Phone Number</span>
+<input id="phone_no" name="phone_no" type="tel" placeholder="123-456-7890" class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"/>
+</label>
+<label class="block">
+<span class="mb-2 block text-sm font-medium text-slate-700">Password</span>
+<input id="password" name="password" type="password" placeholder="Enter a secure password" class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"/>
+</label>
+<label class="block">
+<span class="mb-2 block text-sm font-medium text-slate-700">Confirm Password</span>
+<input id="confirm_password" name="confirm_password" type="password" placeholder="Confirm your password" class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"/>
+</label>
+</div>
+
+<button type="submit" class="mt-6 w-full rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-700">Register</button>
+<p class="mt-4 text-center text-sm text-slate-500">By registering, you agree to our <a href="#" class="font-medium text-emerald-600 hover:text-emerald-700">Terms of Service</a>.</p>
+
+</form>
+
+</div>
+
+<script src="/static/js/register.js"></script>
+
+</body>
+</html>

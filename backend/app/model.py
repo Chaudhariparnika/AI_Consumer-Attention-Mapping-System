@@ -3,39 +3,50 @@ from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 sys.path.append(str(ROOT_DIR))
+
 from database.database import Base
-from sqlalchemy import TIMESTAMP, VARCHAR, Column, Integer, String, Date, func
+from sqlalchemy import Column, Integer, String, TIMESTAMP, func
+
 
 class User(Base):
-  __tablename__ = "users"
+    __tablename__ = "users"
 
-  id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True)
 
-  full_name = Column(VARCHAR(100), nullable=False)
+    full_name = Column(String(100), nullable=False)
 
-  email = Column(VARCHAR(100), unique=True, nullable=False)
-  
-  phone_no = Column(Integer, unique=True, nullable=False)
+    email = Column(String(100), unique=True, nullable=False)
 
-  password = Column(VARCHAR(255), unique=True, nullable=False)
+    phone_no = Column(String(15), unique=True, nullable=False)
 
-  role = Column(VARCHAR(20), nullable=True)
+    password = Column(String(255), nullable=False)
 
-  created_at = Column(TIMESTAMP, default=func.current_timestamp())
+    role = Column(String(20), nullable=False, default="user")
+
+    created_at = Column(
+        TIMESTAMP(timezone=True),
+        server_default=func.now(),
+        nullable=False
+    )
+
 
 class Admin(Base):
-  __tablename__ = "admin"
+    __tablename__ = "admin"
 
-  id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True)
 
-  full_name = Column(VARCHAR(100), nullable=False)
+    full_name = Column(String(100), nullable=False)
 
-  email = Column(VARCHAR(100), unique=True, nullable=False)
-  
-  phone_no = Column(Integer, unique=True, nullable=False)
+    email = Column(String(100), unique=True, nullable=False)
 
-  password = Column(VARCHAR(255), unique=True, nullable=False)
+    phone_no = Column(String(15), unique=True, nullable=False)
 
-  role = Column(VARCHAR(20), nullable=True)
+    password = Column(String(255), nullable=False)
 
-  created_at = Column(TIMESTAMP, default=func.current_timestamp())
+    role = Column(String(20), nullable=False, default="admin")
+
+    created_at = Column(
+        TIMESTAMP(timezone=True),
+        server_default=func.now(),
+        nullable=False
+    )

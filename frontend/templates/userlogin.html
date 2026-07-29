@@ -13,7 +13,7 @@
 
 <div class="h-screen flex justify-center items-center px-4 sm:px-6 lg:px-8">
 
-<form class="w-full max-w-md">
+<form id="loginForm" method="POST" action="/user/login"class="w-full max-w-md">
 
 <!-- Glassmorphism Card -->
 <div class="backdrop-blur bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.18),transparent_24%),radial-gradient(circle_at_bottom_right,rgba(15,23,42,0.08),transparent_20%)] p-8 sm:p-12 rounded-2xl shadow-lg">
@@ -35,6 +35,7 @@ Welcome Back
 <i class="fas fa-envelope text-blue-400 mr-2"></i>Email Address
 </label>
 <input
+id = "email"
 type="email"
 name="email"
 placeholder="Enter your email"
@@ -46,6 +47,7 @@ class="border border-slate-200 bg-white w-full px-4 py-3 rounded-xl focus:outlin
 <i class="fas fa-key text-blue-400 mr-2"></i>Password
 </label>
 <input
+id = "password"
 type="password"
 name="password"
 placeholder="Enter your password"

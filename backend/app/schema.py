@@ -1,6 +1,6 @@
-from fastapi import Depends
+
 from typing import Optional
-from app.model import User
+
 from pydantic import BaseModel
 
 
