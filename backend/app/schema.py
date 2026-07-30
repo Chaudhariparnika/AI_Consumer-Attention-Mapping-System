@@ -1,48 +1,69 @@
+from datetime import datetime
+from pydantic import BaseModel, EmailStr, ConfigDict
+from app.model import UserRole
 
-from typing import Optional
-
-from pydantic import BaseModel
-
-
+# Register
 class RegisterUser(BaseModel):
     full_name: str
-    email: str
-    phone_no: int
+    email: EmailStr
     password: str
-    role: Optional[str] = "user"
-    
-    
+    role: UserRole
+
+# Login
 class LoginUser(BaseModel):
-    email: str
+    email: EmailStr
     password: str
-    
+
+# Response
 class UserResponse(BaseModel):
     id: int
     full_name: str
-    email: str
-    phone_no: int
-    role: str
+    email: EmailStr
+    role: UserRole
+    created_at: datetime
 
-    class Config:
-        from_attributes = True
-    
-class RegisterAdmin(BaseModel):
-    full_name: str
-    email: str
-    phone_no: int
-    password: str
-    role: Optional[str] = "admin"
-    
-class LoginAdmin(BaseModel):
-    email: str
-    password: str
-    
-class AdminResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+# JWT Token
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+    role: UserRole
+
+# Store
+class StoreBase(BaseModel):
+    name: str
+    location: str
+
+class StoreCreate(StoreBase):
+    pass
+
+class StoreResponse(StoreBase):
     id: int
-    full_name: str
-    email: str
-    phone_no: int
-    role: str
+    model_config = ConfigDict(from_attributes=True)
 
-    class Config:
-        from_attributes = True
+# Camera
+class CameraBase(BaseModel):
+    name: str
+    rtsp_url: str
+    is_online: bool = True
+    store_id: int
+
+class CameraCreate(CameraBase):
+    pass
+
+class CameraResponse(CameraBase):
+    id: int
+    model_config = ConfigDict(from_attributes=True)
+
+# Dashboard
+class OverviewMetrics(BaseModel):
+    total_stores: int
+    total_users: int
+    total_cameras: int
+    total_products: int
+    total_shelves: int
+    todays_visitors: int
+    avg_dwell_time_mins: float
+    active_ai_cameras: int
+    product_engagement_score: float

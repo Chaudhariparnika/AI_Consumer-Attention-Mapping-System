@@ -4,21 +4,12 @@ form.addEventListener("submit", async function (e) {
 
     e.preventDefault();
 
-    const email = document.getElementById("email").value;
+    const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
-
-    let apiUrl = "";
-
-    if (window.location.pathname === "/user/login") {
-        apiUrl = "/api/user/login";
-    }
-    else if (window.location.pathname === "/admin/login") {
-        apiUrl = "/api/admin/login";
-    }
 
     try {
 
-        const response = await fetch(apiUrl, {
+        const response = await fetch("/api/login", {
 
             method: "POST",
 
@@ -27,42 +18,61 @@ form.addEventListener("submit", async function (e) {
             },
 
             body: JSON.stringify({
-                email,
-                password
+                email: email,
+                password: password
             })
 
         });
 
         const result = await response.json();
 
+        console.log("Login Response:", result);
+
         if (response.ok) {
 
-            localStorage.setItem(
-                "access_token",
-                result.access_token
-            );
+            // Store JWT token
+            localStorage.setItem("access_token", result.access_token);
 
-            alert(result.message);
+            // Store user information
+            localStorage.setItem("role", result.role);
+            localStorage.setItem("full_name", result.full_name);
 
-            if (window.location.pathname === "/user/login") {
-                window.location.href = "/user/dashboard";
+            console.log("Stored Full Name:", localStorage.getItem("full_name"));
+
+            alert("Login Successful");
+
+            switch (result.role) {
+
+                case "admin":
+                    window.location.href = "/admin/dashboard";
+                    break;
+
+                case "store_manager":
+                    window.location.href = "/store/dashboard";
+                    break;
+
+                case "retail_analyst":
+                    window.location.href = "/retail/dashboard";
+                    break;
+
+                case "marketing_analyst":
+                    window.location.href = "/marketing/dashboard";
+                    break;
+
+                default:
+                    alert("Unknown user role.");
+                    break;
             }
-            else {
-                window.location.href = "/admin/dashboard";
-            }
+
+        } else {
+
+            alert(result.detail || "Invalid email or password");
 
         }
-        else {
 
-            alert(result.detail);
+    } catch (error) {
 
-        }
-
-    }
-    catch (error) {
-
-        console.log(error);
-
+        console.error("Login Error:", error);
         alert("Server Error");
 
     }

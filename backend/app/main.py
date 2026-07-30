@@ -4,20 +4,36 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
 import sys
+from fastapi.middleware.cors import CORSMiddleware
+from database.database import engine, Base
+from app.routers import login, register, dashboard #, users, stores, cameras, etc.
+
+# Create DB tables
+Base.metadata.create_all(bind=engine)
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 sys.path.append(str(ROOT_DIR))
 
-from app.routers import login, register
+
+BASE_DIR = Path(__file__).resolve().parent
+FRONTEND_DIR = BASE_DIR.parent.parent / "frontend"
+
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # API Routers
 app.include_router(login.router)
 app.include_router(register.router)
+app.include_router(dashboard.router)
 
-BASE_DIR = Path(__file__).resolve().parent
-FRONTEND_DIR = BASE_DIR.parent.parent / "frontend"
 
 app.mount(
     "/static",
@@ -33,38 +49,48 @@ templates = Jinja2Templates(
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     return templates.TemplateResponse(
-        "front_page.html",
+        "login.html",
         {"request": request}
     )
 
 # ---------------- USER ----------------
 
-@app.get("/user/login", response_class=HTMLResponse)
-async def user_login_page(request: Request):
-    return templates.TemplateResponse(
-        "userlogin.html",
-        {"request": request}
-    )
-
-@app.get("/user/register", response_class=HTMLResponse)
+@app.get("/register", response_class=HTMLResponse)
 async def user_register_page(request: Request):
     return templates.TemplateResponse(
-        "userregister.html",
+        "register.html",
         {"request": request}
     )
 
-# ---------------- ADMIN ----------------
 
-@app.get("/admin/login", response_class=HTMLResponse)
-async def admin_login_page(request: Request):
+@app.get("/admin/dashboard", response_class=HTMLResponse)
+async def admin_dashboard(request: Request):
     return templates.TemplateResponse(
-        "adminlogin.html",
+        "admin_dashboard.html",
         {"request": request}
     )
 
-@app.get("/admin/register", response_class=HTMLResponse)
-async def admin_register_page(request: Request):
+
+@app.get("/store/dashboard", response_class=HTMLResponse)
+async def store_dashboard(request: Request):
     return templates.TemplateResponse(
-        "adminregister.html",
+        "store_dashboard.html",
         {"request": request}
     )
+
+
+@app.get("/retail/dashboard", response_class=HTMLResponse)
+async def retail_dashboard(request: Request):
+    return templates.TemplateResponse(
+        "retail_dashboard.html",
+        {"request": request}
+    )
+
+
+@app.get("/marketing/dashboard", response_class=HTMLResponse)
+async def marketing_dashboard(request: Request):
+    return templates.TemplateResponse(
+        "marketing_dashboard.html",
+        {"request": request}
+    )
+

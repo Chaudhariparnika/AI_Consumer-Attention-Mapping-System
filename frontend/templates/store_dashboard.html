@@ -1,0 +1,291 @@
+import React, { useState } from 'react';
+import {
+  Home,
+  Package,
+  Layers,
+  Camera,
+  Users,
+  Flame,
+  BarChart3,
+  User,
+  LogOut,
+  Clock,
+  Store,
+  Plus,
+  RefreshCw,
+  FileText,
+  Bell,
+  Search,
+  Activity,
+  CheckCircle2,
+  AlertCircle,
+  Video
+} from 'lucide-react';
+
+export default function StoreManagerDashboard() {
+  const [activeTab, setActiveTab] = useState('Dashboard');
+
+  // Dummy Store KPI Data
+  const storeKPIs = [
+    { title: "Store Name", val: "Pune Central Branch", icon: Store, color: "from-blue-500/20 to-cyan-500/20" },
+    { title: "Today's Visitors", val: "1,420", icon: Users, color: "from-purple-500/20 to-pink-500/20" },
+    { title: "Active Cameras", val: "12 / 14", icon: Camera, color: "from-emerald-500/20 to-teal-500/20" },
+    { title: "Total Products", val: "450", icon: Package, color: "from-amber-500/20 to-orange-500/20" },
+    { title: "Total Shelves", val: "38", icon: Layers, color: "from-indigo-500/20 to-violet-500/20" },
+    { title: "Avg Dwell Time", val: "5.8 min", icon: Clock, color: "from-rose-500/20 to-red-500/20" },
+  ];
+
+  const navItems = [
+    { label: 'Dashboard', icon: Home },
+    { label: 'Products', icon: Package },
+    { label: 'Shelves', icon: Layers },
+    { label: 'Cameras', icon: Camera },
+    { label: 'Customer Traffic', icon: Users },
+    { label: 'Heatmaps', icon: Flame },
+    { label: 'Reports', icon: BarChart3 },
+    { label: 'Profile', icon: User },
+  ];
+
+  return (
+    <div className="flex h-screen overflow-hidden bg-slate-950 text-slate-100 font-sans antialiased selection:bg-purple-500 selection:text-white">
+      
+      {/* 1. SIDEBAR */}
+      <aside className="w-64 bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 shadow-2xl rounded-2xl m-4 flex flex-col justify-between p-4 hidden md:flex">
+        <div>
+          {/* Logo / Brand Header */}
+          <div className="flex items-center gap-3 px-2 py-3 border-b border-slate-800">
+            <Store className="h-7 w-7 text-emerald-400" />
+            <div>
+              <h1 className="text-lg font-bold bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
+                Parnika AI
+              </h1>
+              <p className="text-[10px] text-slate-400 uppercase tracking-widest font-semibold">Store Manager</p>
+            </div>
+          </div>
+
+          {/* Navigation Links */}
+          <nav className="mt-6 space-y-1.5">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.label;
+              return (
+                <button
+                  key={item.label}
+                  onClick={() => setActiveTab(item.label)}
+                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                    isActive
+                      ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-lg shadow-emerald-950/40"
+                      : "text-slate-400 hover:bg-slate-800/40 hover:text-slate-200"
+                  }`}
+                >
+                  <Icon className={`h-4 w-4 ${isActive ? "text-emerald-400" : "text-slate-400"}`} />
+                  <span>{item.label}</span>
+                </button>
+              );
+            })}
+          </nav>
+        </div>
+
+        {/* Logout Section */}
+        <div className="pt-4 border-t border-slate-800/80">
+          <button className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-rose-400 hover:bg-rose-500/10 hover:border-rose-500/20 transition-all border border-transparent">
+            <LogOut className="h-4 w-4" />
+            <span>Logout</span>
+          </button>
+        </div>
+      </aside>
+
+      {/* 2. MAIN CONTENT AREA */}
+      <main className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
+        
+        {/* TOP NAVBAR */}
+        <header className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-4 flex flex-col sm:flex-row gap-4 justify-between items-center shadow-lg">
+          <div className="relative w-full sm:w-80">
+            <Search className="absolute left-3.5 top-2.5 h-4 w-4 text-slate-500" />
+            <input
+              type="text"
+              placeholder="Search products, shelves, cameras..."
+              className="w-full pl-10 pr-4 py-2 text-sm bg-slate-950/60 border border-slate-800 rounded-xl focus:outline-none focus:border-emerald-500/50 text-slate-200 placeholder-slate-500 transition-all"
+            />
+          </div>
+
+          <div className="flex items-center gap-4 w-full sm:w-auto justify-end">
+            <button className="relative p-2.5 bg-slate-800/40 border border-slate-700/50 hover:border-emerald-500/50 rounded-xl text-slate-300 transition-all">
+              <Bell className="h-4 w-4" />
+              <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+            </button>
+
+            <div className="flex items-center gap-3 pl-4 border-l border-slate-800">
+              <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-600 flex items-center justify-center font-bold text-white shadow-md">
+                SM
+              </div>
+              <div className="hidden sm:block">
+                <p className="text-sm font-semibold text-slate-200">Rahul Sharma</p>
+                <p className="text-xs text-emerald-400">Store Manager</p>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* QUICK ACTIONS BAR */}
+        <section className="flex flex-wrap items-center justify-between gap-4 bg-slate-900/40 border border-slate-800/60 rounded-2xl p-4 backdrop-blur-md">
+          <div className="flex items-center gap-2">
+            <Activity className="h-5 w-5 text-emerald-400" />
+            <h2 className="text-sm font-semibold text-slate-300">Quick Store Actions</h2>
+          </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <button className="flex items-center gap-2 px-3.5 py-2 bg-emerald-500/20 border border-emerald-500/30 hover:bg-emerald-500/30 text-emerald-300 text-xs font-semibold rounded-xl transition-all">
+              <Plus className="h-4 w-4" /> Add Product
+            </button>
+            <button className="flex items-center gap-2 px-3.5 py-2 bg-slate-800/60 border border-slate-700/60 hover:border-slate-500 text-slate-300 text-xs font-semibold rounded-xl transition-all">
+              <RefreshCw className="h-4 w-4" /> Update Shelf
+            </button>
+            <button className="flex items-center gap-2 px-3.5 py-2 bg-slate-800/60 border border-slate-700/60 hover:border-slate-500 text-slate-300 text-xs font-semibold rounded-xl transition-all">
+              <FileText className="h-4 w-4" /> View Reports
+            </button>
+          </div>
+        </section>
+
+        {/* KPI CARDS GRID */}
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+          {storeKPIs.map((kpi, i) => {
+            const Icon = kpi.icon;
+            return (
+              <div key={i} className={`p-4 rounded-xl border border-slate-800/80 bg-gradient-to-br ${kpi.color} backdrop-blur-md hover:border-slate-700 transition-all duration-300`}>
+                <div className="flex justify-between items-center">
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">{kpi.title}</span>
+                  <Icon className="h-4 w-4 text-slate-300" />
+                </div>
+                <div className="mt-3 text-xl font-bold text-slate-100 truncate">{kpi.val}</div>
+              </div>
+            );
+          })}
+        </section>
+
+        {/* CHARTS SECTION */}
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5 backdrop-blur-xl flex flex-col justify-between">
+            <div className="flex justify-between items-center mb-4">
+              <div>
+                <h3 className="text-base font-bold text-slate-200">Customer Traffic & Peak Hours</h3>
+                <p className="text-xs text-slate-400">Hourly footfall analysis for today</p>
+              </div>
+              <span className="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-lg font-mono">
+                Peak: 5 PM - 7 PM
+              </span>
+            </div>
+            <div className="h-56 flex items-center justify-center border border-dashed border-slate-800 rounded-xl bg-slate-950/40 text-slate-500 text-xs font-mono">
+              [ Chart Canvas: Hourly Visitor & Traffic Trends ]
+            </div>
+          </div>
+
+          {/* PRODUCT ATTENTION OVERVIEW */}
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5 backdrop-blur-xl flex flex-col justify-between">
+            <h3 className="text-base font-bold text-slate-200 mb-4">Product Overview</h3>
+            <div className="space-y-3">
+              <div className="p-3 bg-slate-800/40 border border-slate-700/40 rounded-xl flex justify-between items-center text-xs">
+                <div>
+                  <p className="text-slate-400 text-[10px] uppercase font-semibold">Most Viewed Product</p>
+                  <p className="font-bold text-emerald-400 text-sm mt-0.5">Organic Green Tea</p>
+                </div>
+                <span className="text-emerald-400 font-mono font-bold">94% Attn</span>
+              </div>
+
+              <div className="p-3 bg-slate-800/40 border border-slate-700/40 rounded-xl flex justify-between items-center text-xs">
+                <div>
+                  <p className="text-slate-400 text-[10px] uppercase font-semibold">Least Viewed Product</p>
+                  <p className="font-bold text-rose-400 text-sm mt-0.5">Sugar-Free Cookies</p>
+                </div>
+                <span className="text-rose-400 font-mono font-bold">12% Attn</span>
+              </div>
+
+              <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl flex justify-between items-center text-xs">
+                <div>
+                  <p className="text-amber-400 text-[10px] uppercase font-semibold">Low Attention Alert</p>
+                  <p className="font-bold text-slate-200 mt-0.5">Shelf B3 - Snacks</p>
+                </div>
+                <span className="text-amber-300 text-[10px] bg-amber-500/20 px-2 py-0.5 rounded font-medium">Relocate</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* HEATMAP & CAMERA STATUS */}
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Heatmap Preview Cards */}
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5 backdrop-blur-xl">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-base font-bold text-slate-200">Heatmap Previews</h3>
+              <button className="text-xs text-emerald-400 hover:underline">View Full Screen</button>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="p-4 bg-slate-950/50 border border-slate-800 rounded-xl text-center flex flex-col items-center justify-center h-36">
+                <Flame className="h-8 w-8 text-amber-500 mb-2 animate-bounce" />
+                <p className="text-xs font-bold text-slate-300">Store Traffic Heatmap</p>
+                <p className="text-[10px] text-slate-500 mt-1">Updated 5 mins ago</p>
+              </div>
+              <div className="p-4 bg-slate-950/50 border border-slate-800 rounded-xl text-center flex flex-col items-center justify-center h-36">
+                <Layers className="h-8 w-8 text-emerald-400 mb-2" />
+                <p className="text-xs font-bold text-slate-300">Shelf Attention Heatmap</p>
+                <p className="text-[10px] text-slate-500 mt-1">High engagement on Aisle 1</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Camera Status & Live Feed Placeholder */}
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5 backdrop-blur-xl">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-base font-bold text-slate-200">Live Camera Health</h3>
+              <span className="text-xs text-slate-400">12 Online / 2 Offline</span>
+            </div>
+            <div className="space-y-2.5">
+              <div className="p-3 bg-slate-950/40 border border-slate-800/80 rounded-xl flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Video className="h-4 w-4 text-emerald-400" />
+                  <div>
+                    <p className="text-xs font-bold text-slate-200">Cam-01 (Entrance A)</p>
+                    <p className="text-[10px] text-slate-500">RTSP: rtsp://192.168.1.101/live</p>
+                  </div>
+                </div>
+                <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-400 flex items-center gap-1">
+                  <CheckCircle2 className="h-3 w-3" /> Online
+                </span>
+              </div>
+
+              <div className="p-3 bg-slate-950/40 border border-slate-800/80 rounded-xl flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Video className="h-4 w-4 text-rose-400" />
+                  <div>
+                    <p className="text-xs font-bold text-slate-200">Cam-04 (Back Shelf)</p>
+                    <p className="text-[10px] text-slate-500">RTSP: Connection Interrupted</p>
+                  </div>
+                </div>
+                <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-rose-500/20 text-rose-400 flex items-center gap-1">
+                  <AlertCircle className="h-3 w-3" /> Offline
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* RECENT ACTIVITIES */}
+        <section className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5 backdrop-blur-xl">
+          <h3 className="text-base font-bold text-slate-200 mb-3">Recent Store Activities</h3>
+          <div className="space-y-2 text-xs">
+            {[
+              { text: "Shelf 'Aisle 2 - Beverages' arrangement updated", time: "10 mins ago", type: "shelf" },
+              { text: "Camera 'Cam-12' added to Checkout Counter", time: "1 hour ago", type: "camera" },
+              { text: "Product 'Dark Chocolate 80%' added to inventory", time: "3 hours ago", type: "product" },
+            ].map((act, i) => (
+              <div key={i} className="flex justify-between items-center p-2.5 bg-slate-950/30 rounded-lg border border-slate-800/50">
+                <span className="text-slate-300">✓ {act.text}</span>
+                <span className="text-slate-500 text-[10px]">{act.time}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+      </main>
+    </div>
+  );
+}
