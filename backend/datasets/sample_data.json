@@ -1,0 +1,61 @@
+{
+  "dataset_name": "Sample Consumer Attention Dataset",
+  "description": "Sample data for AI Consumer Attention Mapping System",
+  "version": "1.0",
+  "stores": [
+    {
+      "store_name": "Downtown Retail Center",
+      "location": "123 Main St, Downtown",
+      "manager_name": "John Smith",
+      "total_shelves": 20,
+      "total_cameras": 8
+    },
+    {
+      "store_name": "Mall Store A",
+      "location": "456 Shopping Mall",
+      "manager_name": "Jane Doe",
+      "total_shelves": 15,
+      "total_cameras": 6
+    }
+  ],
+  "cameras": [
+    {
+      "camera_name": "Camera 1",
+      "store_id": 1,
+      "rtsp_url": "rtsp://demo-camera-1:554/stream",
+      "location": "Zone 1",
+      "status": "Online"
+    },
+    {
+      "camera_name": "Camera 2",
+      "store_id": 1,
+      "rtsp_url": "rtsp://demo-camera-2:554/stream",
+      "location": "Zone 2",
+      "status": "Online"
+    }
+  ],
+  "detections": [
+    {
+      "camera_id": 1,
+      "store_id": 1,
+      "shelf_id": 1,
+      "detected_class": "person",
+      "confidence": 0.92,
+      "bbox_x": 100,
+      "bbox_y": 50,
+      "bbox_w": 80,
+      "bbox_h": 150
+    },
+    {
+      "camera_id": 1,
+      "store_id": 1,
+      "shelf_id": 2,
+      "detected_class": "item",
+      "confidence": 0.95,
+      "bbox_x": 150,
+      "bbox_y": 80,
+      "bbox_w": 50,
+      "bbox_h": 60
+    }
+  ]
+}
