@@ -67,3 +67,20 @@ class OverviewMetrics(BaseModel):
     avg_dwell_time_mins: float
     active_ai_cameras: int
     product_engagement_score: float
+
+class ShelfMetric(BaseModel):
+    name: str
+    visitors: int
+    engagement_score: float
+
+class StoreManagerOverview(BaseModel):
+    store_name: str
+    manager_name: str
+    todays_visitors: int
+    avg_dwell_time_mins: float
+    total_cameras: int
+    active_cameras: int
+    total_shelves: int
+    top_shelf: str
+    attention_focus: str
+    shelf_stats: list[ShelfMetric]

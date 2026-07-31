@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Camera Management</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-sky-50">
+
+<div class="max-w-6xl mx-auto py-12 px-4">
+
+    <header class="mb-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-extrabold text-sky-800">Camera Management</h1>
+                <p class="text-sm text-sky-600">Manage store cameras, statuses and locations</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Add Camera Form -->
+
+    <div class="bg-white shadow-md rounded-2xl p-6 mb-8">
+
+        <h2 class="text-xl font-semibold text-sky-800 mb-4">
+            Add New Camera
+        </h2>
+
+        <form class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            <input
+                id="camera_name"
+                type="text"
+                placeholder="Camera Name"
+                class="border border-sky-100 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-sky-300 bg-white"
+            />
+
+            <input
+                id="store_id"
+                type="number"
+                placeholder="Store ID"
+                class="border border-sky-100 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-sky-300 bg-white"
+            />
+
+            <input
+                id="rtsp_url"
+                type="text"
+                placeholder="RTSP URL"
+                class="col-span-1 md:col-span-2 border border-sky-100 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-sky-300 bg-white"
+            />
+
+            <input
+                id="location"
+                type="text"
+                placeholder="Location"
+                class="border border-sky-100 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-sky-300 bg-white"
+            />
+
+            <select
+                id="status"
+                class="border border-sky-100 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-sky-300 bg-white"
+            >
+                <option>Online</option>
+                <option>Offline</option>
+            </select>
+
+            <div class="md:col-span-2 flex justify-end">
+                <button
+                    onclick="addCamera()"
+                    type="button"
+                    class="mt-2 bg-sky-600 hover:bg-sky-700 text-white px-5 py-2 rounded-lg shadow"
+                >
+                    Add Camera
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+    <!-- AI Controls -->
+
+    <div class="bg-white shadow-lg rounded-lg p-6 mb-8">
+
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+            <div>
+                <h2 class="text-2xl font-semibold mb-2">AI Detection</h2>
+                <p class="text-gray-600">Run YOLO/OpenCV detection for a selected camera and view the latest results.</p>
+            </div>
+
+            <div class="flex gap-3">
+                <button onclick="runDetection()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg">
+                    Run Detection
+                </button>
+                <button onclick="loadSummary()" class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-lg">
+                    Refresh Summary
+                </button>
+            </div>
+
+        </div>
+
+        <div id="aiStatus" class="mt-4 text-sm text-gray-600"></div>
+        <div id="summaryBox" class="mt-4 text-sm text-gray-700"></div>
+        <ul id="detectionResults" class="mt-4 space-y-2"></ul>
+
+    </div>
+    <!-- Camera Table -->
+
+    <div class="bg-white rounded-2xl shadow-md p-6">
+
+        <h2 class="text-xl font-semibold text-sky-800 mb-4">
+            Camera List
+        </h2>
+
+        <div class="overflow-x-auto">
+            <table class="w-full min-w-[640px] divide-y divide-sky-100">
+                <thead class="bg-sky-50 text-sky-700">
+                    <tr>
+                        <th class="text-left p-3 font-medium">ID</th>
+                        <th class="text-left p-3 font-medium">Name</th>
+                        <th class="text-left p-3 font-medium">Store</th>
+                        <th class="text-left p-3 font-medium">Location</th>
+                        <th class="text-left p-3 font-medium">Status</th>
+                        <th class="text-left p-3 font-medium">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="cameraTable" class="bg-white">
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const API="http://127.0.0.1:8000/camera";
+
+
+async function loadCameras(){
+
+const response=await fetch(API+"/");
+
+const result=await response.json();
+
+const table=document.getElementById("cameraTable");
+
+table.innerHTML="";
+
+result.data.forEach(camera=>{
+
+table.innerHTML+=`
+
+<tr class="border text-center">
+
+<td class="p-3">${camera.id}</td>
+
+<td>${camera.camera_name}</td>
+
+<td>${camera.store_id}</td>
+
+<td>${camera.location}</td>
+
+<td>${camera.status}</td>
+
+<td>
+
+<button
+onclick="editCamera(${camera.id})"
+class="bg-green-600 text-white px-3 py-1 rounded">
+
+Edit
+
+</button>
+
+<button
+onclick="deleteCamera(${camera.id})"
+class="bg-red-600 text-white px-3 py-1 rounded ml-2">
+
+Delete
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+}
+
+loadCameras();
+loadSummary();
+
+
+async function addCamera(){
+
+const data={
+
+camera_name:document.getElementById("camera_name").value,
+
+store_id:Number(document.getElementById("store_id").value),
+
+rtsp_url:document.getElementById("rtsp_url").value,
+
+location:document.getElementById("location").value,
+
+status:document.getElementById("status").value
+
+};
+
+await fetch(API+"/add",{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":"application/json"
+
+},
+
+body:JSON.stringify(data)
+
+});
+
+alert("Camera Added Successfully");
+
+location.reload();
+
+}
+
+
+
+async function deleteCamera(id){
+
+if(!confirm("Delete Camera?")) return;
+
+await fetch(API+"/"+id,{
+
+method:"DELETE"
+
+});
+
+location.reload();
+
+}
+
+
+
+
+async function editCamera(id){
+
+const name=prompt("Camera Name");
+
+const locationText=prompt("Location");
+
+const status=prompt("Status (Online/Offline)");
+
+await fetch(API+"/"+id,{
+
+method:"PUT",
+
+headers:{
+
+"Content-Type":"application/json"
+
+},
+
+body:JSON.stringify({
+
+camera_name:name,
+
+location:locationText,
+
+status:status
+
+})
+
+});
+
+alert("Camera Updated");
+
+location.reload();
+
+}
+
+async function loadSummary(){
+
+const response=await fetch("/analytics/summary");
+const summary=await response.json();
+
+const summaryBox=document.getElementById("summaryBox");
+summaryBox.innerHTML=`<strong>Total detections:</strong> ${summary.total_detections}<br><strong>Recent classes:</strong> ${summary.recent_classes.join(", ") || "None"}`;
+
+}
+
+async function runDetection(){
+
+const cameraId=prompt("Enter Camera ID to run detection:");
+
+if(!cameraId){ return; }
+
+const statusBox=document.getElementById("aiStatus");
+statusBox.innerText="Running detection...";
+
+const response=await fetch(`/analytics/run?camera_id=${cameraId}`, {method:"POST"});
+const result=await response.json();
+
+const resultsList=document.getElementById("detectionResults");
+resultsList.innerHTML="";
+
+if(result.detections && result.detections.length){
+
+result.detections.forEach(det=>{
+
+const li=document.createElement("li");
+li.className="bg-gray-50 border rounded p-3 text-sm";
+li.innerHTML=`<strong>${det.class_name}</strong> · confidence ${det.confidence} · bbox (${det.x1}, ${det.y1}) to (${det.x2}, ${det.y2})`;
+resultsList.appendChild(li);
+
+});
+
+statusBox.innerText=`Detection completed for camera ${cameraId}.`;
+
+}else{
+
+statusBox.innerText="No detections found.";
+
+}
+
+loadSummary();
+
+}
+
+</script>
+
+</body>
+</html>

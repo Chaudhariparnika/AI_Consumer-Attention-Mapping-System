@@ -1,12 +1,16 @@
+import os
+import sys
+from pathlib import Path
+
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from pathlib import Path
-import sys
-from fastapi.middleware.cors import CORSMiddleware
-from database.database import engine, Base
-from app.routers import login, register, dashboard #, users, stores, cameras, etc.
+from starlette.middleware.sessions import SessionMiddleware
+
+from database.database import Base, engine
+from app.routers import analytics, camera, dashboard, google_auth, login, register  #, users, stores, cameras, etc.
 
 # Create DB tables
 Base.metadata.create_all(bind=engine)
@@ -22,6 +26,11 @@ FRONTEND_DIR = BASE_DIR.parent.parent / "frontend"
 app = FastAPI()
 
 app.add_middleware(
+    SessionMiddleware,
+    secret_key=os.getenv("SECRET_KEY", "SUPER_SECRET_GLASSMORPHISM_KEY_CHANGE_IN_PROD"),
+)
+
+app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_credentials=True,
@@ -33,6 +42,9 @@ app.add_middleware(
 app.include_router(login.router)
 app.include_router(register.router)
 app.include_router(dashboard.router)
+app.include_router(camera.router)
+app.include_router(analytics.router)
+app.include_router(google_auth.router)
 
 
 app.mount(
@@ -91,6 +103,15 @@ async def retail_dashboard(request: Request):
 async def marketing_dashboard(request: Request):
     return templates.TemplateResponse(
         "marketing_dashboard.html",
+        {"request": request}
+    )
+
+
+@app.get("/camera_management", response_class=HTMLResponse)
+@app.get("/camera_management.html", response_class=HTMLResponse)
+async def camera_management_page(request: Request):
+    return templates.TemplateResponse(
+        "camera_management.html",
         {"request": request}
     )
 
